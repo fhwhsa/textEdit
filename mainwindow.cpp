@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "aboutdialog.h"
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -34,7 +35,6 @@ void MainWindow::iniSignalSlots()
 
 void MainWindow::setStatusBarText()
 {
-    qDebug() << 1;
     QTextCursor tc = ui->plainTextEdit->textCursor();
 
     ui->statusbar->clearMessage();
@@ -47,3 +47,11 @@ void MainWindow::setStatusBarText()
 
     ui->statusbar->addPermanentWidget(&author);
 }
+
+// 关于
+void MainWindow::on_action_about_triggered()
+{
+    AboutDialog dia;
+    dia.exec();
+}
+

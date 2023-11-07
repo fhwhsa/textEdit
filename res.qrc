@@ -16,5 +16,6 @@
         <file>img/cut.png</file>
         <file>img/copy.png</file>
         <file>img/autoWrap.png</file>
+        <file>img/editor.png</file>
     </qresource>
 </RCC>

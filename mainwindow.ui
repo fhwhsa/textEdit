@@ -93,7 +93,7 @@
     <property name="title">
      <string>帮助(&amp;H)</string>
     </property>
-    <addaction name="action_A"/>
+    <addaction name="action_about"/>
    </widget>
    <addaction name="menu_F"/>
    <addaction name="menu_E"/>
@@ -312,7 +312,7 @@
   <action name="action_statusbar">
    <property name="icon">
     <iconset resource="res.qrc">
-     <normaloff>:/img/statusbar.png</normaloff>:/img/statusbar.png</iconset>
+     <normaloff>:/img/statusBar.png</normaloff>:/img/statusBar.png</iconset>
    </property>
    <property name="text">
     <string>状态栏(&amp;S)</string>
@@ -347,7 +347,7 @@
     <string>编辑器背景色</string>
    </property>
   </action>
-  <action name="action_A">
+  <action name="action_about">
    <property name="text">
     <string>关于(&amp;A)</string>
    </property>
