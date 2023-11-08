@@ -1,4 +1,5 @@
 #include "searchdialog.h"
+#include "mymesbox.h"
 #include "ui_searchdialog.h"
 #include <QDebug>
 
@@ -40,21 +41,16 @@ void searchDialog::on_btnSearchNext_clicked()
     QString context = plainTextEdit->toPlainText();
     bool isUp = ui->radioUp->isChecked();
     Qt::CaseSensitivity type = ui->chIsCase->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive;
-    if (target.size() == 0 || context.size() == 0) {
-        QMessageBox mes;
 
-        mes.setWindowTitle("Error");
-        mes.setText("Target or context is empty!");
-        mes.exec();
+    if (target.size() == 0 || context.size() == 0) {
+        myMesBox mes("Error", "Target or context is empty!");
         return;
     }
     if (!context.contains(target)) {
-        QMessageBox mes;
-        mes.setWindowTitle("Warnning");
-        mes.setText("Not found!");
-        mes.exec();
+        myMesBox mes("Warnning", "Not found!");
         return;
     }
+
     QTextCursor cursor = plainTextEdit->textCursor();
     int pos = cursor.position(), len = target.size(), t;
 
@@ -73,6 +69,6 @@ void searchDialog::on_btnSearchNext_clicked()
         cursor.setPosition(isUp ? (int)context.size() : 0);
         flag = 0;
         plainTextEdit->setTextCursor(cursor);
-        emit ui->btnSearchNext->click();
+        ui->btnSearchNext->click();
     }
 }

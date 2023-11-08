@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "aboutdialog.h"
 #include "searchdialog.h"
+#include "replacedialog.h"
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -49,7 +50,6 @@ void MainWindow::setStatusBarText()
     ui->statusbar->addPermanentWidget(&author);
 }
 
-// 关于
 void MainWindow::on_action_about_triggered()
 {
     AboutDialog dia;
@@ -60,6 +60,13 @@ void MainWindow::on_action_about_triggered()
 void MainWindow::on_action_find_triggered()
 {
     searchDialog dia(ui->plainTextEdit);
+    dia.exec();
+}
+
+
+void MainWindow::on_action_replace_triggered()
+{
+    replaceDialog dia(ui->plainTextEdit);
     dia.exec();
 }
 
