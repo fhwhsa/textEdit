@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "aboutdialog.h"
+#include "searchdialog.h"
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -52,6 +53,13 @@ void MainWindow::setStatusBarText()
 void MainWindow::on_action_about_triggered()
 {
     AboutDialog dia;
+    dia.exec();
+}
+
+
+void MainWindow::on_action_find_triggered()
+{
+    searchDialog dia(ui->plainTextEdit);
     dia.exec();
 }
 

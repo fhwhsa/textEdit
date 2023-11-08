@@ -31,5 +31,6 @@ private:
 private slots:
     void setStatusBarText();
     void on_action_about_triggered();
+    void on_action_find_triggered();
 };
 #endif // MAINWINDOW_H

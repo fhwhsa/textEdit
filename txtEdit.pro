@@ -11,15 +11,18 @@ CONFIG += c++17
 SOURCES += \
     aboutdialog.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    searchdialog.cpp
 
 HEADERS += \
     aboutdialog.h \
-    mainwindow.h
+    mainwindow.h \
+    searchdialog.h
 
 FORMS += \
     aboutdialog.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    searchdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
