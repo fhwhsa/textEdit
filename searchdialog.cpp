@@ -1,5 +1,4 @@
 #include "searchdialog.h"
-#include "mymesbox.h"
 #include "ui_searchdialog.h"
 #include <QDebug>
 
@@ -43,11 +42,11 @@ void searchDialog::on_btnSearchNext_clicked()
     Qt::CaseSensitivity type = ui->chIsCase->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive;
 
     if (target.size() == 0 || context.size() == 0) {
-        myMesBox mes("Error", "Target or context is empty!");
+        QMessageBox::warning(this, "Waining", "Target or context is empty!");
         return;
     }
     if (!context.contains(target)) {
-        myMesBox mes("Warnning", "Not found!");
+        QMessageBox::warning(this, "Warning", "Not found!");
         return;
     }
 

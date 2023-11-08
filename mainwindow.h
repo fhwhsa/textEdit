@@ -2,10 +2,15 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QPlainTextEdit>
 #include <QSize>
 #include <QLabel>
 #include <QTextCursor>
 #include <QString>
+#include <QFileDialog>
+#include <QFile>
+#include <QIODevice>
+#include <QTextStream>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -24,14 +29,23 @@ private:
     QLabel statusLabel;
     QLabel statusCursorLabel;
     QLabel author;
+    bool isInitialState; // 标记程序是否刚启动，因为QPlainTextEdit初始时发送了一次textChanged信号
+    bool isSaved;
+    QString currFileName;
 
     void init();
     void iniSignalSlots();
 
 private slots:
     void setStatusBarText();
+
     void on_action_about_triggered();
     void on_action_find_triggered();
     void on_action_replace_triggered();
+    void on_action_new_triggered();
+    void on_action_open_triggered();
+    void on_action_save_triggered();
+    void on_action_saveAs_triggered();
+    void on_plainTextEdit_textChanged();
 };
 #endif // MAINWINDOW_H

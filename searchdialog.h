@@ -5,6 +5,7 @@
 #include <QString>
 #include <QPlainTextEdit>
 #include <QTextCursor>
+#include <QMessageBox>
 
 namespace Ui {
 class searchDialog;

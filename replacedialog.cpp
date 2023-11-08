@@ -1,5 +1,4 @@
 #include "replacedialog.h"
-#include "mymesbox.h"
 #include "ui_replacedialog.h"
 
 replaceDialog::replaceDialog(QWidget *parent) :
@@ -43,11 +42,11 @@ void replaceDialog::on_btnSearchNext_clicked()
     Qt::CaseSensitivity type = ui->chIsCase->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive;
 
     if (target.size() == 0 || context.size() == 0) {
-        myMesBox mes("Error", "Target or context is empty!");
+        QMessageBox::warning(this, "Warning", "Target or context is empty!");
         return;
     }
     if (!context.contains(target)) {
-        myMesBox mes("Warnning", "Not found!");
+        QMessageBox::warning(this, "Warning", "Not found!");
         return;
     }
 
@@ -82,7 +81,7 @@ void replaceDialog::on_btnReplace_clicked()
     int len = replaceContext.size();
 
     if (l == -1) {
-        myMesBox mes("Error", "No selected text!");
+        QMessageBox::warning(this, "Warning", "No selected text!");
         return;
     }
 
@@ -106,7 +105,7 @@ void replaceDialog::on_btnReplaceAll_clicked()
     QString target = ui->searchTarget->text();
 
     if (target.size() == 0) {
-        myMesBox mes("Error", "Target is empty!");
+        QMessageBox::warning(this, "Warning", "Target is empty!");
         return;
     }
 
