@@ -12,6 +12,12 @@
 #include <QIODevice>
 #include <QTextStream>
 #include <QTextCursor>
+#include <QColor>
+#include <QColorDialog>
+#include <QPalette>
+#include <QTextCharFormat>
+#include <QFont>
+#include <QFontDialog>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -33,7 +39,6 @@ private:
     bool isInitialState; // 标记程序是否刚启动，因为QPlainTextEdit初始时发送了一次textChanged信号
     bool isSaved;
     QString currFileName;
-    QString copyContext;
 
     void init();
     void iniSignalSlots();
@@ -50,6 +55,20 @@ private slots:
     void on_action_saveAs_triggered();
     void on_plainTextEdit_textChanged();
     void on_action_cut_triggered();
+
+    void on_action_toolBar_triggered();
+
+    void on_action_statusbar_triggered();
+
+    void on_action_autoWrap_triggered();
+
+    void on_action_fontColor_triggered();
+
+    void on_action_backgroundColor_triggered();
+
+    void on_action_fontBackgroundColor_triggered();
+
+    void on_action_font_triggered();
 
 signals:
     void copyAvailable(bool);

@@ -280,6 +280,12 @@
    </property>
   </action>
   <action name="action_autoWrap">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/img/autoWrap.png</normaloff>:/img/autoWrap.png</iconset>
@@ -289,6 +295,12 @@
    </property>
   </action>
   <action name="action_showLineNum">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/img/showLineNum.png</normaloff>:/img/showLineNum.png</iconset>
@@ -301,6 +313,12 @@
    </property>
   </action>
   <action name="action_toolBar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/img/toolBar.png</normaloff>:/img/toolBar.png</iconset>
@@ -310,6 +328,12 @@
    </property>
   </action>
   <action name="action_statusbar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="res.qrc">
      <normaloff>:/img/statusBar.png</normaloff>:/img/statusBar.png</iconset>

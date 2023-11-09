@@ -28,7 +28,6 @@ void MainWindow::init()
     statusCursorLabel.setMaximumWidth(150);
 
     currFileName = "";
-    copyContext = "";
     isInitialState = true;
     isSaved = true;
 
@@ -39,6 +38,12 @@ void MainWindow::init()
     ui->action_recovery->setEnabled(false);
     ui->action_copy->setEnabled(false);
     ui->action_cut->setEnabled(false);
+
+    ui->action_toolBar->setChecked(true);
+    ui->action_statusbar->setChecked(true);
+    ui->action_autoWrap->setChecked(true);
+    ui->action_showLineNum->setChecked(false);
+
 }
 
 void MainWindow::iniSignalSlots()
@@ -62,6 +67,8 @@ void MainWindow::iniSignalSlots()
 
     connect(ui->action_paste, SIGNAL(triggered()), ui->plainTextEdit, SLOT(paste()));
     connect(ui->action_selectAll, SIGNAL(triggered()), ui->plainTextEdit, SLOT(selectAll()));
+
+    connect(ui->action_exit, SIGNAL(triggered()), this, SLOT(close()));
 }
 
 void MainWindow::setStatusBarText()
@@ -222,5 +229,70 @@ void MainWindow::on_plainTextEdit_textChanged()
 void MainWindow::on_action_cut_triggered()
 {
     emit ui->plainTextEdit->cut();
+}
+
+
+void MainWindow::on_action_toolBar_triggered()
+{
+    ui->toolBar->setVisible(ui->action_toolBar->isChecked());
+}
+
+
+void MainWindow::on_action_statusbar_triggered()
+{
+    ui->statusbar->setVisible(ui->action_statusbar->isChecked());
+}
+
+
+void MainWindow::on_action_autoWrap_triggered()
+{
+    ui->plainTextEdit->setLineWrapMode((QPlainTextEdit::LineWrapMode)ui->action_autoWrap->isChecked());
+}
+
+
+void MainWindow::on_action_fontColor_triggered()
+{
+    QColor color = QColorDialog::getColor(Qt::black, this, "字体颜色");
+    if (color.isValid()) {
+        QTextCharFormat format = ui->plainTextEdit->currentCharFormat(); // 不改变之前的字体（为选中）格式
+        format.setForeground(color);
+        ui->plainTextEdit->setCurrentCharFormat(format);
+    }
+}
+
+
+void MainWindow::on_action_backgroundColor_triggered()
+{
+    QColor color = QColorDialog::getColor(Qt::white, this, "背景颜色");
+    if (color.isValid()) {
+        QPalette palette = ui->plainTextEdit->palette();
+        palette.setColor(QPalette::Base, color);
+        ui->plainTextEdit->setPalette(palette);
+    }
+}
+
+
+void MainWindow::on_action_fontBackgroundColor_triggered()
+{
+    QColor color = QColorDialog::getColor(Qt::white, this, "字体背景颜色");
+    if (color.isValid()) {
+        QTextCharFormat format = ui->plainTextEdit->currentCharFormat();
+        format.setBackground(color);
+        ui->plainTextEdit->setCurrentCharFormat(format);
+    }
+}
+
+
+void MainWindow::on_action_font_triggered()
+{
+    bool ok;
+    QFont font = QFontDialog::getFont(&ok, ui->plainTextEdit->font(), this);
+    if (ok) {
+        if (font.pointSize() == 0)
+            font.setPointSize(12);
+        QTextCharFormat format = ui->plainTextEdit->currentCharFormat();
+        format.setFont(font);
+        ui->plainTextEdit->setCurrentCharFormat(format);
+    }
 }
 
