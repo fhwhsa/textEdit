@@ -28,16 +28,40 @@ void MainWindow::init()
     statusCursorLabel.setMaximumWidth(150);
 
     currFileName = "";
+    copyContext = "";
     isInitialState = true;
     isSaved = true;
 
     this->setWindowTitle("新建文件");
     setStatusBarText();
+
+    ui->action_revoke->setEnabled(false);
+    ui->action_recovery->setEnabled(false);
+    ui->action_copy->setEnabled(false);
+    ui->action_cut->setEnabled(false);
 }
 
 void MainWindow::iniSignalSlots()
 {
     connect(ui->plainTextEdit, SIGNAL(cursorPositionChanged()), this, SLOT(setStatusBarText()));
+
+    connect(ui->action_revoke, SIGNAL(triggered()), ui->plainTextEdit, SLOT(undo()));
+    connect(ui->plainTextEdit, &QPlainTextEdit::undoAvailable, [this](bool f) { ui->action_revoke->setEnabled(f); });
+
+    connect(ui->action_recovery, SIGNAL(triggered()), ui->plainTextEdit, SLOT(redo()));
+    connect(ui->plainTextEdit, &QPlainTextEdit::redoAvailable, [this](bool f) { ui->action_recovery->setEnabled(f); });
+
+    connect(ui->action_copy, SIGNAL(triggered()), ui->plainTextEdit, SLOT(copy()));
+    connect(ui->plainTextEdit, &QPlainTextEdit::copyAvailable, [this](bool f) {
+        ui->action_copy->setEnabled(f);
+        emit copyAvailable(f);
+    });
+
+    connect(ui->action_cut, SIGNAL(triggered()), ui->plainTextEdit, SLOT(cut()));
+    connect(this, &MainWindow::copyAvailable, [this](bool f) {ui->action_cut->setEnabled(f);});
+
+    connect(ui->action_paste, SIGNAL(triggered()), ui->plainTextEdit, SLOT(paste()));
+    connect(ui->action_selectAll, SIGNAL(triggered()), ui->plainTextEdit, SLOT(selectAll()));
 }
 
 void MainWindow::setStatusBarText()
@@ -136,6 +160,8 @@ void MainWindow::on_action_open_triggered()
 
 void MainWindow::on_action_save_triggered()
 {
+    if (isSaved) return;
+
     if (currFileName != "") {
         QFile file(currFileName);
         if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -190,5 +216,11 @@ void MainWindow::on_plainTextEdit_textChanged()
     }
     isSaved = false;
     this->setWindowTitle("*" + (currFileName == "" ? "新建文件" : currFileName));
+}
+
+
+void MainWindow::on_action_cut_triggered()
+{
+    emit ui->plainTextEdit->cut();
 }
 
