@@ -66,7 +66,7 @@ void MainWindow::iniSignalSlots()
     });
 
     connect(ui->action_cut, SIGNAL(triggered()), plainTextEdit, SLOT(cut()));
-    connect(this, &MainWindow::copyAvailable, [this](bool f) {ui->action_cut->setEnabled(f);});
+    connect(plainTextEdit, &QPlainTextEdit::copyAvailable, [this](bool f) {ui->action_cut->setEnabled(f);});
 
     connect(ui->action_paste, SIGNAL(triggered()), plainTextEdit, SLOT(paste()));
     connect(ui->action_selectAll, SIGNAL(triggered()), plainTextEdit, SLOT(selectAll()));
@@ -228,10 +228,6 @@ void MainWindow::plainTextEdit_textChanged()
     this->setWindowTitle("*" + (currFileName == "" ? "新建文件" : currFileName));
 }
 
-void MainWindow::on_action_cut_triggered()
-{
-    emit plainTextEdit->cut();
-}
 
 
 void MainWindow::on_action_toolBar_triggered()

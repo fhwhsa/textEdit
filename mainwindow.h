@@ -57,7 +57,6 @@ private slots:
     void on_action_open_triggered();
     void on_action_save_triggered();
     void on_action_saveAs_triggered();
-    void on_action_cut_triggered();
     void on_action_toolBar_triggered();
     void on_action_statusbar_triggered();
     void on_action_autoWrap_triggered();

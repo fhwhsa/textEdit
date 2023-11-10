@@ -45,7 +45,7 @@ void searchDialog::on_btnSearchNext_clicked()
         QMessageBox::warning(this, "Waining", "Target or context is empty!");
         return;
     }
-    if (!context.contains(target)) {
+    if (!context.contains(target, type)) {
         QMessageBox::warning(this, "Warning", "Not found!");
         return;
     }

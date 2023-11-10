@@ -54,8 +54,7 @@ void replaceDialog::on_btnSearchNext_clicked()
     int pos = cursor.position(), len = target.size(), t;
 
     if (isUp) t = context.lastIndexOf(target, pos - (flag ? len + 1 : 0), type);
-    else t = context.indexOf(target, pos, type)
-            ;
+    else t = context.indexOf(target, pos, type);
     if (t >= 0)
     {
         l = t; r = t + len;
@@ -103,13 +102,14 @@ void replaceDialog::on_btnReplaceAll_clicked()
     QString replaceContext = ui->replaceContext->text();
     QString context = plainTextEdit->toPlainText();
     QString target = ui->searchTarget->text();
+    Qt::CaseSensitivity type = ui->chIsCase->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive;
 
     if (target.size() == 0) {
         QMessageBox::warning(this, "Warning", "Target is empty!");
         return;
     }
 
-    context.replace(target, replaceContext);
+    context.replace(target, replaceContext, type);
     plainTextEdit->setPlainText(context);
 }
 
