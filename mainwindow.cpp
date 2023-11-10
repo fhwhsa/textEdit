@@ -3,6 +3,7 @@
 #include "aboutdialog.h"
 #include "searchdialog.h"
 #include "replacedialog.h"
+#include "codeeditor.h"
 #include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -22,6 +23,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::init()
 {
+    plainTextEdit = new QPlainTextEdit;
+    this->setCentralWidget(plainTextEdit);
+
     author.setText(tr("苏焯明"));
     author.setMaximumWidth(150);
     statusLabel.setMaximumWidth(150);
@@ -43,41 +47,41 @@ void MainWindow::init()
     ui->action_statusbar->setChecked(true);
     ui->action_autoWrap->setChecked(true);
     ui->action_showLineNum->setChecked(false);
-
 }
 
 void MainWindow::iniSignalSlots()
 {
-    connect(ui->plainTextEdit, SIGNAL(cursorPositionChanged()), this, SLOT(setStatusBarText()));
+    connect(plainTextEdit, SIGNAL(cursorPositionChanged()), this, SLOT(setStatusBarText()));
 
-    connect(ui->action_revoke, SIGNAL(triggered()), ui->plainTextEdit, SLOT(undo()));
-    connect(ui->plainTextEdit, &QPlainTextEdit::undoAvailable, [this](bool f) { ui->action_revoke->setEnabled(f); });
+    connect(ui->action_revoke, SIGNAL(triggered()), plainTextEdit, SLOT(undo()));
+    connect(plainTextEdit, &QPlainTextEdit::undoAvailable, [this](bool f) { ui->action_revoke->setEnabled(f); });
 
-    connect(ui->action_recovery, SIGNAL(triggered()), ui->plainTextEdit, SLOT(redo()));
-    connect(ui->plainTextEdit, &QPlainTextEdit::redoAvailable, [this](bool f) { ui->action_recovery->setEnabled(f); });
+    connect(ui->action_recovery, SIGNAL(triggered()), plainTextEdit, SLOT(redo()));
+    connect(plainTextEdit, &QPlainTextEdit::redoAvailable, [this](bool f) { ui->action_recovery->setEnabled(f); });
 
-    connect(ui->action_copy, SIGNAL(triggered()), ui->plainTextEdit, SLOT(copy()));
-    connect(ui->plainTextEdit, &QPlainTextEdit::copyAvailable, [this](bool f) {
+    connect(ui->action_copy, SIGNAL(triggered()), plainTextEdit, SLOT(copy()));
+    connect(plainTextEdit, &QPlainTextEdit::copyAvailable, [this](bool f) {
         ui->action_copy->setEnabled(f);
         emit copyAvailable(f);
     });
 
-    connect(ui->action_cut, SIGNAL(triggered()), ui->plainTextEdit, SLOT(cut()));
+    connect(ui->action_cut, SIGNAL(triggered()), plainTextEdit, SLOT(cut()));
     connect(this, &MainWindow::copyAvailable, [this](bool f) {ui->action_cut->setEnabled(f);});
 
-    connect(ui->action_paste, SIGNAL(triggered()), ui->plainTextEdit, SLOT(paste()));
-    connect(ui->action_selectAll, SIGNAL(triggered()), ui->plainTextEdit, SLOT(selectAll()));
+    connect(ui->action_paste, SIGNAL(triggered()), plainTextEdit, SLOT(paste()));
+    connect(ui->action_selectAll, SIGNAL(triggered()), plainTextEdit, SLOT(selectAll()));
 
     connect(ui->action_exit, SIGNAL(triggered()), this, SLOT(close()));
+    connect(plainTextEdit, SIGNAL(textChanged()), this, SLOT(plainTextEdit_textChanged()));
 }
 
 void MainWindow::setStatusBarText()
 {
-    QTextCursor tc = ui->plainTextEdit->textCursor();
+    QTextCursor tc = plainTextEdit->textCursor();
 
     ui->statusbar->clearMessage();
 
-    statusLabel.setText(QString("length: %1   lines: %2|").arg(ui->plainTextEdit->toPlainText().size()).arg(tc.blockNumber() + 1));
+    statusLabel.setText(QString("length: %1   lines: %2|").arg(plainTextEdit->toPlainText().size()).arg(tc.blockNumber() + 1));
     ui->statusbar->addPermanentWidget(&statusLabel);
 
     statusCursorLabel.setText("Ln: " + QString::number(tc.blockNumber() + 1) + "   Col: " + QString::number(tc.columnNumber()) + "|");
@@ -95,14 +99,14 @@ void MainWindow::on_action_about_triggered()
 
 void MainWindow::on_action_find_triggered()
 {
-    searchDialog dia(ui->plainTextEdit);
+    searchDialog dia(plainTextEdit);
     dia.exec();
 }
 
 
 void MainWindow::on_action_replace_triggered()
 {
-    replaceDialog dia(ui->plainTextEdit);
+    replaceDialog dia(plainTextEdit);
     dia.exec();
 }
 
@@ -122,7 +126,7 @@ void MainWindow::on_action_new_triggered()
         }
     }
 
-    ui->plainTextEdit->clear(); // 发射textChanged信号，isSaved必须后面修改
+    plainTextEdit->clear(); // 发射textChanged信号，isSaved必须后面修改
 
     isSaved = true;
     currFileName = "";
@@ -156,7 +160,7 @@ void MainWindow::on_action_open_triggered()
     QTextStream tStream(&file);
     tStream.setAutoDetectUnicode(true);
     QString context = tStream.readAll();
-    ui->plainTextEdit->setPlainText(context);
+    plainTextEdit->setPlainText(context);
     file.close();
 
     isSaved = true;
@@ -178,7 +182,7 @@ void MainWindow::on_action_save_triggered()
 
         QTextStream tStream(&file);
         tStream.setAutoDetectUnicode(true);
-        QString context = ui->plainTextEdit->toPlainText();
+        QString context = plainTextEdit->toPlainText();
         tStream << context;
         file.flush();
         file.close();
@@ -204,7 +208,7 @@ void MainWindow::on_action_saveAs_triggered()
 
     QTextStream tStream(&file);
     tStream.setAutoDetectUnicode(true);
-    QString context = ui->plainTextEdit->toPlainText();
+    QString context = plainTextEdit->toPlainText();
     tStream << context;
     file.flush();
     file.close();
@@ -214,8 +218,7 @@ void MainWindow::on_action_saveAs_triggered()
     currFileName = fileName;
 }
 
-
-void MainWindow::on_plainTextEdit_textChanged()
+void MainWindow::plainTextEdit_textChanged()
 {
     if (isInitialState) {
         isInitialState = false;
@@ -225,10 +228,9 @@ void MainWindow::on_plainTextEdit_textChanged()
     this->setWindowTitle("*" + (currFileName == "" ? "新建文件" : currFileName));
 }
 
-
 void MainWindow::on_action_cut_triggered()
 {
-    emit ui->plainTextEdit->cut();
+    emit plainTextEdit->cut();
 }
 
 
@@ -246,7 +248,7 @@ void MainWindow::on_action_statusbar_triggered()
 
 void MainWindow::on_action_autoWrap_triggered()
 {
-    ui->plainTextEdit->setLineWrapMode((QPlainTextEdit::LineWrapMode)ui->action_autoWrap->isChecked());
+    plainTextEdit->setLineWrapMode((QPlainTextEdit::LineWrapMode)ui->action_autoWrap->isChecked());
 }
 
 
@@ -254,9 +256,9 @@ void MainWindow::on_action_fontColor_triggered()
 {
     QColor color = QColorDialog::getColor(Qt::black, this, "字体颜色");
     if (color.isValid()) {
-        QTextCharFormat format = ui->plainTextEdit->currentCharFormat(); // 不改变之前的字体（为选中）格式
-        format.setForeground(color);
-        ui->plainTextEdit->setCurrentCharFormat(format);
+        QPalette palette = plainTextEdit->palette();
+        palette.setColor(QPalette::Text, color);
+        plainTextEdit->setPalette(palette);
     }
 }
 
@@ -265,20 +267,21 @@ void MainWindow::on_action_backgroundColor_triggered()
 {
     QColor color = QColorDialog::getColor(Qt::white, this, "背景颜色");
     if (color.isValid()) {
-        QPalette palette = ui->plainTextEdit->palette();
+        QPalette palette = plainTextEdit->palette();
         palette.setColor(QPalette::Base, color);
-        ui->plainTextEdit->setPalette(palette);
+        plainTextEdit->setPalette(palette);
     }
 }
 
 
 void MainWindow::on_action_fontBackgroundColor_triggered()
 {
+    // 不支持全局修改，显示行号没有保留格式
     QColor color = QColorDialog::getColor(Qt::white, this, "字体背景颜色");
     if (color.isValid()) {
-        QTextCharFormat format = ui->plainTextEdit->currentCharFormat();
+        QTextCharFormat format = plainTextEdit->currentCharFormat();
         format.setBackground(color);
-        ui->plainTextEdit->setCurrentCharFormat(format);
+        plainTextEdit->setCurrentCharFormat(format);
     }
 }
 
@@ -286,13 +289,28 @@ void MainWindow::on_action_fontBackgroundColor_triggered()
 void MainWindow::on_action_font_triggered()
 {
     bool ok;
-    QFont font = QFontDialog::getFont(&ok, ui->plainTextEdit->font(), this);
+    QFont font = QFontDialog::getFont(&ok, plainTextEdit->font(), this);
     if (ok) {
         if (font.pointSize() == 0)
             font.setPointSize(12);
-        QTextCharFormat format = ui->plainTextEdit->currentCharFormat();
-        format.setFont(font);
-        ui->plainTextEdit->setCurrentCharFormat(format);
+        plainTextEdit->setFont(font);
     }
+}
+
+
+void MainWindow::on_action_showLineNum_triggered()
+{
+    QPlainTextEdit *t;
+    if (ui->action_showLineNum->isChecked())
+        t = new CodeEditor();
+    else
+        t = new QPlainTextEdit();
+    t->setPlainText(plainTextEdit->toPlainText());
+    t->setFont(plainTextEdit->font());
+    t->setPalette(plainTextEdit->palette());
+    delete plainTextEdit;
+    plainTextEdit = t;
+    this->setCentralWidget(t);
+    iniSignalSlots();
 }
 

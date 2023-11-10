@@ -18,6 +18,8 @@
 #include <QTextCharFormat>
 #include <QFont>
 #include <QFontDialog>
+#include <QKeyEvent>
+#include <QTextDocument>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -39,12 +41,14 @@ private:
     bool isInitialState; // 标记程序是否刚启动，因为QPlainTextEdit初始时发送了一次textChanged信号
     bool isSaved;
     QString currFileName;
+    QPlainTextEdit *plainTextEdit;
 
     void init();
     void iniSignalSlots();
 
 private slots:
     void setStatusBarText();
+    void plainTextEdit_textChanged();
 
     void on_action_about_triggered();
     void on_action_find_triggered();
@@ -53,22 +57,16 @@ private slots:
     void on_action_open_triggered();
     void on_action_save_triggered();
     void on_action_saveAs_triggered();
-    void on_plainTextEdit_textChanged();
     void on_action_cut_triggered();
-
     void on_action_toolBar_triggered();
-
     void on_action_statusbar_triggered();
-
     void on_action_autoWrap_triggered();
-
     void on_action_fontColor_triggered();
-
     void on_action_backgroundColor_triggered();
-
     void on_action_fontBackgroundColor_triggered();
-
     void on_action_font_triggered();
+
+    void on_action_showLineNum_triggered();
 
 signals:
     void copyAvailable(bool);
